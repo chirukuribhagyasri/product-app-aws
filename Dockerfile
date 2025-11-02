@@ -1,4 +1,4 @@
 FROM public.ecr.aws/docker/library/openjdk:17
-COPY target/ProductAppAWS-0.0.1-SNAPSHOT.jar Product-App-AWS.jar
+ADD ProductAppAWS-0.0.1-SNAPSHOT.jar Product-App-AWS.jar
 ENTRYPOINT ["java", "-jar", "Product-App-AWS.jar"]
 EXPOSE 8080
