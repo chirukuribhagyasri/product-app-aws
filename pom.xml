@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.product</groupId>
-	<artifactId>ProductAppAWS</artifactId>
+	<artifactId>Product-App-AWS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ProductAppAWS</name>
 	<description>Demo project for Spring Boot</description>
