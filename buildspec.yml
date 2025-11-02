@@ -9,23 +9,21 @@ phases:
   pre_build:
     commands:
       - echo "Building the Maven project..."
-      - mvn clean package                # Build the JAR
-      - echo "Listing files to verify JAR exists:"
-      - ls -l target                     # Ensure JAR is here
+      - mvn clean package
+      - echo "Listing files in target/ to verify JAR exists:"
+      - ls -l target
       - echo "Logging in to Amazon ECR..."
       - aws --version
       - REPOSITORY_URI=079400934343.dkr.ecr.us-east-1.amazonaws.com/product-registry
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
-      - echo "IMAGE_TAG is $IMAGE_TAG"
 
   build:
     commands:
-      - echo "Copying JAR to Docker context..."
-      - cp target/Product-App-AWS-0.0.1-SNAPSHOT.jar .    # ensure Docker can see it
-      - echo "Building the Docker image..."
-      - docker build -t $REPOSITORY_URI:latest -f Dockerfile .
+      - echo "Copying JAR to Docker build context..."
+      - cp target/Product-App-AWS-0.0.1-SNAPSHOT.jar ./Product-App-AWS.jar
+      - echo "Building Docker image..."
+      - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
@@ -35,12 +33,9 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo "Writing imagedefinitions.json..."
-      - DOCKER_CONTAINER_NAME=product-registry
-      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - echo "imagedefinitions.json content:"
+      - printf '[{"name":"product-registry","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
 
 artifacts:
   files:
     - imagedefinitions.json
-    - target/Product-App-AWS-0.0.1-SNAPSHOT.jar
