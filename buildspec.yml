@@ -3,26 +3,31 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto17   # Ensures Java 17 for your Maven project
+      java: corretto17   # Ensures Java 17 for Maven build
   pre_build:
     commands:
-      - echo "Building application JAR with Maven..."
+      - echo "Starting pre_build phase..."
+      - echo "Building JAR with Maven..."
       - mvn clean package -DskipTests
+      - echo "Checking target folder contents..."
+      - ls -l target/
       - echo "Logging in to Amazon ECR..."
       - REPOSITORY_URI=079400934343.dkr.ecr.us-east-1.amazonaws.com/product-registry
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
+      - echo "Starting build phase..."
       - echo "Building Docker image..."
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
+      - echo "Starting post_build phase..."
       - echo "Pushing Docker images to ECR..."
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo "Creating imagedefinitions.json for ECS or CodePipeline..."
+      - echo "Creating imagedefinitions.json for ECS..."
       - printf '[{"name":"product-registry","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - echo "imagedefinitions.json content:"
       - cat imagedefinitions.json
