@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Building Maven project..."
+      - mvn clean package
+      - echo "Logging in to ECR..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 079400934343.dkr.ecr.us-east-1.amazonaws.com
+      - IMAGE_TAG=latest
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t 079400934343.dkr.ecr.us-east-1.amazonaws.com/product-registry:$IMAGE_TAG .
+  post_build:
+    commands:
+      - echo "Pushing Docker image..."
+      - docker push 079400934343.dkr.ecr.us-east-1.amazonaws.com/product-registry:$IMAGE_TAG
