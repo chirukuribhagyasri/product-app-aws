@@ -8,12 +8,6 @@ pipeline {
     }
 
     stages {
-        stage('Check Workspace') {
-            steps {
-                echo "Listing workspace contents..."
-                bat 'dir'
-            }
-        }
 
         stage('Clean') {
             steps {
