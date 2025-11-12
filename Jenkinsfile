@@ -9,21 +9,21 @@ pipeline {
 
     stages {
 
-        stage('Clean') {
+        stage('Clean Stage') {
             steps {
                 echo "Running Maven clean..."
                 bat '%MAVEN_HOME%\\bin\\mvn.cmd clean'
             }
         }
 
-        stage('Compile') {
+        stage('Compile Stage') {
             steps {
                 echo "Running Maven compile..."
                 bat '%MAVEN_HOME%\\bin\\mvn.cmd compile'
             }
         }
 
-        stage('Install') {
+        stage('Install Stage') {
             steps {
                 echo "Running Maven install..."
                 bat '%MAVEN_HOME%\\bin\\mvn.cmd install'
