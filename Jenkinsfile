@@ -1,13 +1,13 @@
 pipeline {
 agent any
 environment {
-    JAVA_HOME="C:\Program Files\Java\jdk-17"
+    JAVA_HOME="C:/Program Files/Java\jdk-17"
   }
 stages {
 stage('Clean stage') {
 steps {
 dir("ProductApp") {
-bat ' C:\Users\bhagy\Downloads\apache-maven-3.9.4-bin\apache-maven-3.9.4/bin/mvn clean'
+bat 'C:/Users/bhagy/Downloads/apache-maven-3.9.4-bin/apache-maven-3.9.4/bin/mvn clean'
 }
 }
 }
@@ -15,7 +15,7 @@ bat ' C:\Users\bhagy\Downloads\apache-maven-3.9.4-bin\apache-maven-3.9.4/bin/mvn
 stage('Compile stage') {
 steps {
 dir("ProductApp") {
-bat ' C:\Users\bhagy\Downloads\apache-maven-3.9.4-bin\apache-maven-3.9.4/bin/mvn compile'
+bat 'C:/Users/bhagy/Downloads/apache-maven-3.9.4-bin/apache-maven-3.9.4/bin/mvn compile'
 }
 }
 }
@@ -23,7 +23,7 @@ bat ' C:\Users\bhagy\Downloads\apache-maven-3.9.4-bin\apache-maven-3.9.4/bin/mvn
 stage('Install stage') {
 steps {
 dir("ProductApp") {
-bat ' C:\Users\bhagy\Downloads\apache-maven-3.9.4-bin\apache-maven-3.9.4/bin/mvn install'
+bat 'C:/Users/bhagy/Downloads/apache-maven-3.9.4-bin/apache-maven-3.9.4/bin/mvn install'
 }
 }
 }
